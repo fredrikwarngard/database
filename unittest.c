@@ -26,23 +26,136 @@ int clean_suite_2(void)
   return 0;
 }
 
-
-void test_mk_node() {
+//make node
+void test_NEW_NODE() {
   char* x = "Hello, world!";
-  void* y = (int)237;
-  Node node_guy = new_node("Elliot", "Smith");
+  void* y = (int) 237;
   Node hello = new_node(x, y);
-  Node noob = new_node("Noob", node_guy);
-
+  CU_ASSERT(strcmp(x, *(hello->key)) == 0);
+  CU_ASSERT(y == *(hello->value));
 }
 
 
+//make a node with the previous node as the element to the second node
+void test_NEWNODE2() {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  Node noob  = new_node("Noob", hello);
+  CU_ASSERT(strcmp("Noob", *(noob->key)) == 0);
+  CU_ASSERT(strcmp("noob", *(noob->key)) != 0);
+  CU_ASSERT(noob->value == hello);
+}
+
+
+//return the node with the fitting key from a structure, if it contains the node. In the second case the node with the "Hello, world!" keyword is stored as an element, not in the linked list. Therefor it won't be checked.
+void testRETURN_ELEMENT(void) {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  Node noob  = new_node("Noob", hello);
+  CU_ASSERT(return_element(noob, "Noob") != NULL);
+  CU_ASSERT(return_element(noob, "Hello, world!") == NULL);
+}
+
+
+//basically just a call on the function above. SAME TEST!
+void testQUERY(void) {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  Node noob  = new_node("Noob", hello);
+  CU_ASSERT(return_element(noob, "Noob") != NULL);
+  CU_ASSERT(return_element(noob, "Hello, world!") == NULL);
+}
+
+//change the value in a node. first example tries to put in a node that already contains the node it is about to be inserted in. node noob->(value)node hello->(value)node noob
+void testUPDATE(void) {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  Node noob  = new_node("Noob", hello);
+  update(hello, noob);    // borde inte funka att stoppa in dem i varandras values
+  CU_ASSERT((int)*(hello->value) != 237);
+  update(hello, "Santa Maria");
+  CU_ASSERT(strcmp("Santa Maria", *(hello->value)) == 0);
+}
+
+//checks if second argument has a like in name among the nodes in the list. return that node if that's the case. returns NULL otherwise
+void testGET_INSERTION_SPOT() {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  char* a = "Goodbye, cruel world";
+  void* b = "ingenting";
+  Node byebye = new_node(a, b);
+  hello->next = byebye;
+  CU_ASSERT(get_insertion_spot(hello, "Goodbye, cruel world!") != NULL);
+  CU_ASSERT(get_insertion_spot(byebye, "Goodbye, cruel world!") != NULL);
+}
+
+//insert a new node into the structure at the right spot given by the function above
+void testINSERT(void) {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  char* a = "Goodbye, cruel world";
+  void* b = "ingenting";
+  Node byebye = new_node(a, b);
+  char* new_x = "Grim";
+  void* new_y = "Node to be inputted";
+  Node new_guy = new_node(new_x, new_y);
+  insert(&hello, byebye);  
+  CU_ASSERT(hello->next == byebye);
+  insert(&hello, new_guy);  
+  CU_ASSERT(hello->next->next == new_guy);
+}
+
+
+//basically returns the parent node instead of using a parent pointer. test case finds the parent node to the second node in a list of two, which is the pointer to the database. second test case insert another node and find its parent.
+void testFIND_PREVIOUS_NODE(void) {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  char* a = "Goodbye, cruel world";
+  void* b = "ingenting";
+  Node byebye = new_node(a, b);
+  char* new_x = "Grim";
+  void* new_y = "Node to be inputted";
+  Node new_guy = new_node(new_x, new_y);
+  insert(&hello, byebye);
+  CU_ASSERT(find_previous_node(hello, byebye) == hello);
+  insert(&hello, new_guy);
+  CU_ASSERT(find_previous_node(hello, new_guy) == byebye);
+}
+
+
+//first ASSERT delete controls that the first node in the list has been replaced by the second node 
+void testDELETE(void) {
+  char* x = "Hello, world!";
+  void* y = (int)237;
+  Node hello = new_node(x, y);
+  char* a = "Goodbye, cruel world";
+  void* b = "ingenting";
+  Node byebye = new_node(a, b);
+  insert(&hello, byebye);
+  CU_ASSERT(delete(&hello, hello)   == byebye);
+  CU_ASSERT(delete(&byebye, byebye) == NULL);)
+}
+
+
+//not sure i should have a test_PRINT????
 
 
 
-void testISTRING_MK(void)
-{
-  char *str1 = istring_mk(NULL);
+
+
+ -------------============== PREVIOUS CODE STUFF ================-------------
+
+
+
+
+  /*  char *str1 = istring_mk(NULL);
   CU_ASSERT(str1 == NULL);
   char str2[] = "foo";
   char *str3 = istring_mk(str2);
@@ -55,8 +168,8 @@ void testISTRING_MK(void)
   str3[0]  = 'F';
   CU_ASSERT(strcmp(str2, str3) > 0);
   istring_rm(str1);
-  istring_rm(str3);
-}
+  istring_rm(str3);*/
+
 
 void testISTRING_RM(void)
 {

@@ -1,6 +1,9 @@
 #include <string.h>
 #include <CUnit/Basic.h>
+//#include "db_main.h"
+//#include "db_main_list.h"
 #include "list_module.h" 
+//#include "tree_module.h"
 #include <stdlib.h>
 
 int init_suite_1(void)
@@ -13,6 +16,7 @@ int clean_suite_1(void)
   return 0;
 }
 
+
 //make node
 void testNEW_NODE() {
   char* x = "Hello, world!";
@@ -21,6 +25,7 @@ void testNEW_NODE() {
   CU_ASSERT(strcmp(x, (hello->key)) == 0);
   CU_ASSERT(strcmp(y, ((char*)hello->value)) == 0);
 }
+
 
 //make a node with the previous node as the element to the second node. The last assert compare that the pointers on the key element are the same, which they should be since they are the same.
 void testNEW_NODE2() {
@@ -33,6 +38,7 @@ void testNEW_NODE2() {
   CU_ASSERT((((Node)(noob->value))->key) == (hello->key));
 }
 
+
 //return the node with the fitting key from a structure, if it contains the node. In the second case the node with the "Hello, world!" keyword is stored as an element, not in the linked list. Therefor it won't be checked.
 void testRETURN_ELEMENT(void) {
   char* x = "Hello, world!";
@@ -42,6 +48,7 @@ void testRETURN_ELEMENT(void) {
   CU_ASSERT(return_element(noob, "Noob") != NULL);
   CU_ASSERT(return_element(noob, "Hello, world!") == NULL);
 }
+
 
 //basically just a call on the function above. SAME TEST!
 void testQUERY(void) {
@@ -95,6 +102,7 @@ void testINSERT(void) {
   CU_ASSERT(hello->next->next == new_guy);
 }
 
+
 //basically returns the parent node instead of using a parent pointer. test case finds the parent node to the second node in a list of two, which is the pointer to the database. second test case insert another node and find its parent.
 void testFIND_PREVIOUS_NODE(void) {
   char* x = "Hello, world!";
@@ -111,6 +119,7 @@ void testFIND_PREVIOUS_NODE(void) {
   insert(&hello, new_guy);
   CU_ASSERT(find_previous_node(hello, new_guy) == byebye);
 }
+
 
 //first ASSERT delete controls that the first node in the list has been replaced by the second node 
 void testDELETE(void) {
@@ -142,6 +151,7 @@ int main()
       return CU_get_error();
     }
 
+
   /* add the tests to the suites */
   if (
     (NULL == CU_add_test(pSuite1, "test of new_node(char*, void*)", testNEW_NODE)) ||
@@ -158,6 +168,7 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
     }
+
 
   /* Run all tests using the CUnit Basic interface */
   CU_basic_set_mode(CU_BRM_VERBOSE);

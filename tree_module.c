@@ -97,7 +97,7 @@ void free_node(Node x) {
 void* delete (Node* db, Node node_to_be_deleted) {
   Node root = *db;
   Node parent = node_to_be_deleted->parent;
-  printf("%s heter noden som skall tas bort\n", node_to_be_deleted->key);
+  //  printf("\n%s heter noden som skall tas bort\n", node_to_be_deleted->key);
  
   //IF NODE IS A LEAF
   if (node_to_be_deleted->leftChild == NULL && node_to_be_deleted->rightChild == NULL) {
@@ -118,13 +118,9 @@ void* delete (Node* db, Node node_to_be_deleted) {
   // IF NODE ONLY HAVE ONE CHILD
   else if (node_to_be_deleted->leftChild == NULL) {
     if (parent == NULL) {
-      puts("boyaaa!");
       root = node_to_be_deleted->rightChild;
-      puts("Still OK?");
       root->parent = NULL;
-      puts("Still... OK?");
       free_node(node_to_be_deleted);
-      puts("Freed?");
     }
     else if (parent->leftChild == node_to_be_deleted) {
       parent->leftChild = node_to_be_deleted->rightChild;
@@ -140,7 +136,6 @@ void* delete (Node* db, Node node_to_be_deleted) {
   
   else if (node_to_be_deleted->rightChild == NULL) {
     if (parent == NULL) {
-      puts("cool school!");
       root = node_to_be_deleted->leftChild;
       root->parent = NULL;
       free_node(node_to_be_deleted);

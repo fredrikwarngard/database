@@ -30,21 +30,20 @@ void* return_element(Node db, char* element_to_be_found){
 }
 
 /*
-void* query_recursive(Node db, char* query_string) {
+void* query(Node db, char* query_string) { //recursive
   if (db == NULL) {
     return db;
   }
   if (strcmp(query_string, db->key) == 0) {
     return db;
   } else {
-    query_recursive(db->next, query_string);
+    query(db->next, query_string);
   }
   return NULL;
 }
 */
 
 void* query(Node db, char* query_string) {
-  //  Node element = query_recursive(db, query_string);
   Node element = return_element(db, query_string);
   return element;
 }
@@ -77,33 +76,13 @@ void* insert(Node* db, Node new_node) {
 
 
 void* find_previous_node(Node db, Node node){
-  printf("nu kollar vi: %s\n", db->key);
   if (strcmp(db->key, node->key) == 0) return NULL;
   while (strcmp((db->next)->key, node->key) != 0) {
-    printf("nu kollar vi: %s\n", db->next->key);
     db = db->next;
   }
   return db;
 }
 
-/*
-void* delete_first(Node* pointer_to_pointer) {
-  Node db = *pointer_to_pointer;
-  Node element = db;
-  if (db->next != NULL) {
-    printf("pointer_to_pointer = %s\n", (*pointer_to_pointer)->key);
-    pointer_to_pointer = &(db->next);
-    printf("pointer_to_pointer = %s\n", (*pointer_to_pointer)->key);
-    db = NULL;
-    free(element);
-    return *pointer_to_pointer;
-  } else {
-    *pointer_to_pointer = NULL;
-    free(element);
-    return *pointer_to_pointer;
-  }
-}
-*/
 
 void* delete(Node* db, Node node_to_be_deleted) {
   Node prev_node = find_previous_node(*db, node_to_be_deleted);
@@ -113,7 +92,6 @@ void* delete(Node* db, Node node_to_be_deleted) {
     free(temp->key);
     free(temp->value);
     free(temp);
-    // *db = delete_first(db);
     return *db;
   }
   prev_node->next = node_to_be_deleted->next;

@@ -1,8 +1,5 @@
 #include <string.h>
 #include <CUnit/Basic.h>
-//#include "db_main.h"
-//#include "db_main_list.h"
-//#include "list_module.h" 
 #include "tree_module.h"
 #include <stdlib.h>
 
@@ -16,7 +13,6 @@ int clean_suite_1(void)
   return 0;
 }
 
-
 //make node
 void testNEW_NODE() {
   char* x = "Hello, world!";
@@ -25,7 +21,6 @@ void testNEW_NODE() {
   CU_ASSERT(strcmp(x, (hello->key)) == 0);
   CU_ASSERT(strcmp(y, ((char*)hello->value)) == 0);
 }
-
 
 //make a node with the previous node as the element to the second node. The last assert compare that the pointers on the key element are the same, which they should be since they are the same.
 void testNEW_NODE2() {
@@ -38,7 +33,6 @@ void testNEW_NODE2() {
   CU_ASSERT((((Node)(noob->value))->key) == (hello->key));
 }
 
-
 //return the node with the fitting key from a structure, if it contains the node. In the second case the node with the "Hello, world!" keyword is stored as an element, not in the linked list. Therefor it won't be checked.
 void testRETURN_ELEMENT(void) {
   char* x = "Hello, world!";
@@ -48,7 +42,6 @@ void testRETURN_ELEMENT(void) {
   CU_ASSERT(return_element(noob, "Noob") != NULL);
   CU_ASSERT(return_element(noob, "Hello, world!") == NULL);
 }
-
 
 //basically just a call on the function above. SAME TEST!
 void testQUERY(void) {
@@ -72,8 +65,7 @@ void testUPDATE(void) {
   CU_ASSERT(strcmp("Santa Maria", (hello->value)) == 0);
 }
 
-
-//
+//This inserts a node on the right spot in the tree. The correct spot is entirely determined on the nodes' key-value.
 void testPUT_NODE_IN_TREE(void) {
   char* x = "Hello, world!";
   void* y = "237";
@@ -84,9 +76,7 @@ void testPUT_NODE_IN_TREE(void) {
   put_node_in_tree(hello, byebye);
   CU_ASSERT((hello->leftChild) == byebye);
   CU_ASSERT(((Node)byebye->parent) == hello);
-  
 }
-
 
 //insert a new node into the structure at the right spot given by the function above
 void testINSERT(void) {
@@ -99,14 +89,17 @@ void testINSERT(void) {
   char* new_x = "Grim";
   void* new_y = "Node to be inputted";
   Node new_guy = new_node(new_x, new_y);
-  insert(NULL, hello);
-  insert(&hello, byebye);  
+  Node root = NULL;
+  root = insert(&root, hello);
+  root = insert(&root, byebye);
   CU_ASSERT(hello->leftChild == byebye);
-  insert(&hello, new_guy);  
-  CU_ASSERT(hello->leftChild->rightChild == new_guy);
+  CU_ASSERT(byebye->parent == hello);
+  root = insert(&root, new_guy);
+  CU_ASSERT((byebye->rightChild) == new_guy);
+  CU_ASSERT(((Node)new_guy->parent) == byebye);
 }
 
-
+//return the node with the highest key-value in the datastructure. In this case we construct a root node with one left- and one right child. The maximum function simple returns the rightmost node, since that has the highest key-value by comparative insertion.
 void testMAXIMUM() {
   char* x = "Hello, world!";
   void* y = "237";
@@ -117,15 +110,14 @@ void testMAXIMUM() {
   char* new_x = "Grim";
   void* new_y = "Node to be inputted";
   Node new_guy = new_node(new_x, new_y);
-  insert(NULL, new_guy);
-  insert(&new_guy, hello);
-  insert(&new_guy, byebye);
-  CU_ASSERT(maximum(new_guy) == hello);
+  Node root = NULL;
+  root = insert(&root, new_guy);
+  root = insert(&root, hello);
+  root = insert(&root, byebye);
+  CU_ASSERT(strcmp((((Node)(maximum(root)))->key), x) == 0);
 }
 
-
-
-//first ASSERT delete controls that the first node in the list has been replaced by the second node 
+//The first ASSERT delete controls that the first node in the tree has been replaced by the second node. Second delete removes the last node in the tree.
 void testDELETE(void) {
   char* x = "Hello, world!";
   void* y = "237";
@@ -133,9 +125,13 @@ void testDELETE(void) {
   char* a = "Goodbye, cruel world";
   void* b = "ingenting";
   Node byebye = new_node(a, b);
-  insert(&hello, byebye);
-  CU_ASSERT(delete(&hello, hello)   == byebye);
-  CU_ASSERT(delete(&byebye, byebye) == NULL);
+  Node root = NULL; 
+  root = insert(&root, hello);
+  root = insert(&root, byebye);
+  root = delete(&root, hello);
+  CU_ASSERT(root == byebye);
+  root = delete(&root, byebye);
+  CU_ASSERT(root == NULL);
 }
 
 int main()
@@ -154,7 +150,6 @@ int main()
       return CU_get_error();
     }
 
-
   /* add the tests to the suites */
   if (
     (NULL == CU_add_test(pSuite1, "test of new_node(char*, void*)", testNEW_NODE)) ||
@@ -171,7 +166,6 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
     }
-
 
   /* Run all tests using the CUnit Basic interface */
   CU_basic_set_mode(CU_BRM_VERBOSE);

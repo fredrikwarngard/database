@@ -128,7 +128,7 @@ void print(Node db) {
   printf("Keys\t\tValues\n");
   while(db != NULL) {
     printf("%s\t\t", db->key);
-    printf("%s\n", db->value);
+    printf("%s\n", (char*)db->value);
     db = db->next;
   }
 }

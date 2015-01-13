@@ -4,8 +4,8 @@
 
 
 typedef struct database {
-  char *key;
-  char *value;
+  char* key;
+  void* value;
   struct database *next;
 } *Node;
 

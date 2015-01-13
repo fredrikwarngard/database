@@ -19,7 +19,6 @@ void update(Node, void*);
 void* put_node_in_tree (Node, Node);
 void* insert(Node*, Node);
 void* maximum(Node);
-//void* delete_first(Node*);
 void free_node(Node);
 void* delete(Node*, Node);
 void print(Node);

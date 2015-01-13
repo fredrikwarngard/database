@@ -7,9 +7,9 @@
 
 void* new_node(char* new_node_key, void* new_node_value) {
   Node newNode = malloc(sizeof(struct database));
-  newNode->key = malloc(strlen(new_node_key) + 1); //vet inte om man mÃ¥ste kÃ¶ra free nÃ¤r noden frigÃ¶rs
+  newNode->key = malloc(strlen(new_node_key) + 1);
   strcpy(newNode->key, new_node_key);
-  newNode->value = malloc(strlen(new_node_value) + 1); //samma sak
+  newNode->value = malloc(strlen(new_node_value) + 1);
   strcpy(newNode->value, new_node_value);
   newNode->leftChild = NULL;
   newNode->rightChild = NULL;
@@ -78,11 +78,6 @@ void* insert(Node* db, Node new_node) {
   *db = put_node_in_tree (*db, new_node);
   return root;
 }
-
-
-// SE TILL ATT DET SÄTTS REFERENSER TILL FÖRÄLDRANODER OCHHHHH BARNNODER
-// SE TILL ATT EN NOD INTE SÄTTS SOM BARN TILL EN NOD SOM REDAN HAR TVÅ BARN
-// FIXA FIXA FIXA FIXA, OCH DET FORT!
 
 
 void* maximum(Node bst) {
@@ -172,7 +167,7 @@ void* delete (Node* db, Node node_to_be_deleted) {
       node_to_be_deleted->leftChild = NULL;
       free_node(temp);
     } else {
-      node_to_be_deleted->leftChild = delete(&(node_to_be_deleted->leftChild), max); // recursive call, not working
+      node_to_be_deleted->leftChild = delete(&(node_to_be_deleted->leftChild), max);
     }
   }
   else {
